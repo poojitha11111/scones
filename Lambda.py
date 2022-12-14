@@ -76,9 +76,9 @@ def lambda_handler(event, context):
 ##scoresThreshold (Lambda 3)
 import json
 import ast
+import boto3
 
-
-THRESHOLD = .93
+THRESHOLD = .80
 
 
 def lambda_handler(event, context):
@@ -100,6 +100,18 @@ def lambda_handler(event, context):
         pass
     else:
         print("Entered error")
+        client = boto3.client(
+            "sns",
+        )
+        
+        # Send your sms message.
+        response = client.publish(
+           
+            TopicArn="arn:aws:sns:us-east-1:866595538391:topic1",
+            Message="Hello, this is the test message AWS SNS! The classification model has not met the threshold.",
+            Subject="SNS Test"
+        ) 
+      
         raise("THRESHOLD_CONFIDENCE_NOT_MET")
 
     return {
